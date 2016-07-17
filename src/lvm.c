@@ -210,6 +210,8 @@ void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
       lua_assert(ttisnil(slot));  /* old value must be nil */
       tm = fasttm(L, h->metatable, TM_NEWINDEX);  /* get metamethod */
       if (tm == NULL) {  /* no metamethod? */
+        if (ttype(t) == LUA_TTBLFRZ)
+          luaG_runerror(L, "attempt to modify frozen table");
         if (slot == luaO_nilobject)  /* no previous entry? */
           slot = luaH_newkey(L, h, key);  /* create one */
         /* no metamethod and (now) there is an entry with given key */
