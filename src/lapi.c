@@ -886,6 +886,16 @@ LUA_API int lua_setmetatable (lua_State *L, int objindex) {
 }
 
 
+LUA_API void lua_freezetable (lua_State *L, int idx) {
+  TValue *t;
+  lua_lock(L);
+  t = index2addr(L, idx);
+  api_check(L, ttistable(t), "table expected");
+  settt_(t, ctb(LUA_TTBLFRZ));
+  lua_unlock(L);
+}
+
+
 LUA_API void lua_setuservalue (lua_State *L, int idx) {
   StkId o;
   lua_lock(L);
