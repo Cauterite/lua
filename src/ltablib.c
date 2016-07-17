@@ -422,6 +422,27 @@ static int sort (lua_State *L) {
 
 /* }====================================================== */
 
+/*
+** {======================================================
+** Freeze
+** =======================================================
+*/
+
+static int freeze (lua_State *L) {
+  luaL_checktype(L, 1, LUA_TTABLE);
+  lua_freezetable(L, 1);
+  lua_settop(1);
+  return 1;  /* return table */
+}
+
+
+static int isfrozen (lua_State *L) {
+  luaL_checktype(L, 1, LUA_TTABLE);
+  lua_pushboolean(L, lua_isfrozentable(L, 1));
+  return 1;
+}
+
+/* }====================================================== */
 
 static const luaL_Reg tab_funcs[] = {
   {"concat", tconcat},
@@ -434,6 +455,8 @@ static const luaL_Reg tab_funcs[] = {
   {"remove", tremove},
   {"move", tmove},
   {"sort", sort},
+  {"freeze", freeze},
+  {"isfrozen", isfrozen},
   {NULL, NULL}
 };
 
