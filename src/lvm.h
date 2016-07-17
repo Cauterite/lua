@@ -78,7 +78,7 @@
 ** call is not creating a new entry.
 */
 #define luaV_fastset(L,t,k,slot,f,v) \
-  (!ttistable(t) \
+  ((ttype(t) != LUA_TTBLMUT) \
    ? (slot = NULL, 0) \
    : (slot = f(hvalue(t), k), \
      ttisnil(slot) ? 0 \
