@@ -1273,6 +1273,8 @@ void luaV_execute (lua_State *L) {
           c = GETARG_Ax(*ci->u.l.savedpc++);
         }
         h = hvalue(ra);
+        if (ttype(h) == LUA_TTBLFRZ)
+          luaG_runerror(L, "attempt to modify frozen table");
         last = ((c-1)*LFIELDS_PER_FLUSH) + n;
         if (last > h->sizearray)  /* needs more space? */
           luaH_resizearray(L, h, last);  /* preallocate it at once */
