@@ -59,6 +59,11 @@
 #define LUA_TNUMINT	(LUA_TNUMBER | (1 << 4))  /* integer numbers */
 
 
+/* Variant tags for tables */
+#define LUA_TTBLMUT	(LUA_TTABLE | (0 << 4))  /* mutable tables */
+#define LUA_TTBLFRZ	(LUA_TTABLE | (1 << 4))  /* frozen tables */
+
+
 /* Bit mark for collectable types */
 #define BIT_ISCOLLECTABLE	(1 << 6)
 
@@ -148,7 +153,7 @@ typedef struct lua_TValue {
 #define ttisstring(o)		checktype((o), LUA_TSTRING)
 #define ttisshrstring(o)	checktag((o), ctb(LUA_TSHRSTR))
 #define ttislngstring(o)	checktag((o), ctb(LUA_TLNGSTR))
-#define ttistable(o)		checktag((o), ctb(LUA_TTABLE))
+#define ttistable(o)		checktype((o), ctb(LUA_TTABLE))
 #define ttisfunction(o)		checktype(o, LUA_TFUNCTION)
 #define ttisclosure(o)		((rttype(o) & 0x1F) == LUA_TFUNCTION)
 #define ttisCclosure(o)		checktag((o), ctb(LUA_TCCL))
