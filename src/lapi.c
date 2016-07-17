@@ -859,6 +859,7 @@ LUA_API int lua_setmetatable (lua_State *L, int objindex) {
   }
   switch (ttnov(obj)) {
     case LUA_TTABLE: {
+      api_check(L, ttype(obj) != LUA_TTBLFRZ, "attempt to modify frozen table");
       hvalue(obj)->metatable = mt;
       if (mt) {
         luaC_objbarrier(L, gcvalue(obj), mt);
