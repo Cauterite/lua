@@ -292,6 +292,12 @@ LUA_API int lua_isuserdata (lua_State *L, int idx) {
 }
 
 
+LUA_API int lua_isfrozentable (lua_State *L, int idx) {
+  const TValue *o = index2addr(L, idx);
+  return ttisfrztable(o);
+}
+
+
 LUA_API int lua_rawequal (lua_State *L, int index1, int index2) {
   StkId o1 = index2addr(L, index1);
   StkId o2 = index2addr(L, index2);
