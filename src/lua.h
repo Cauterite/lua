@@ -266,6 +266,10 @@ LUA_API int   (lua_setmetatable) (lua_State *L, int objindex);
 LUA_API void  (lua_setuservalue) (lua_State *L, int idx);
 
 
+LUA_API int   (lua_isfrozentable) (lua_State *L, int idx);
+LUA_API int   (lua_freezetable) (lua_State *L, int idx);
+
+
 /*
 ** 'load' and 'call' functions (load and run Lua code)
 */
