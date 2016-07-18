@@ -397,11 +397,14 @@ LUA_API const char *lua_tolstring (lua_State *L, int idx, size_t *len) {
 
 LUA_API size_t lua_rawlen (lua_State *L, int idx) {
   StkId o = index2addr(L, idx);
-  switch (ttype(o)) {
-    case LUA_TSHRSTR: return tsvalue(o)->shrlen;
-    case LUA_TLNGSTR: return tsvalue(o)->u.lnglen;
-    case LUA_TUSERDATA: return uvalue(o)->len;
+  switch (ttnov(o)) {
+    case LUA_TSTRING:
+      switch (ttype(o)) {
+        case LUA_TSHRSTR: return tsvalue(o)->shrlen;
+        case LUA_TLNGSTR: return tsvalue(o)->u.lnglen;
+      }
     case LUA_TTABLE: return luaH_getn(hvalue(o));
+    case LUA_TUSERDATA: return uvalue(o)->len;
     default: return 0;
   }
 }
