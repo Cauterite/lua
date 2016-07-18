@@ -434,11 +434,14 @@ LUA_API lua_State *lua_tothread (lua_State *L, int idx) {
 
 LUA_API const void *lua_topointer (lua_State *L, int idx) {
   StkId o = index2addr(L, idx);
-  switch (ttype(o)) {
+  switch (ttnov(o)) {
     case LUA_TTABLE: return hvalue(o);
-    case LUA_TLCL: return clLvalue(o);
-    case LUA_TCCL: return clCvalue(o);
-    case LUA_TLCF: return cast(void *, cast(size_t, fvalue(o)));
+    case LUA_TFUNCTION:
+    	switch (ttype(o)) {
+	    case LUA_TLCL: return clLvalue(o);
+	    case LUA_TCCL: return clCvalue(o);
+	    case LUA_TLCF: return cast(void *, cast(size_t, fvalue(o)));
+    	}
     case LUA_TTHREAD: return thvalue(o);
     case LUA_TUSERDATA: return getudatamem(uvalue(o));
     case LUA_TLIGHTUSERDATA: return pvalue(o);
