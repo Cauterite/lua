@@ -813,7 +813,7 @@ LUA_API void lua_rawset (lua_State *L, int idx) {
   api_checknelems(L, 2);
   o = index2addr(L, idx);
   api_check(L, ttistable(o), "table expected");
-  api_check(L, ttype(o) != LUA_TTBLFRZ, "attempt to modify frozen table");
+  if (ttype(o) == LUA_TTBLFRZ) luaG_runerror(L, "attempt to modify frozen table");
   slot = luaH_set(L, hvalue(o), L->top - 2);
   setobj2t(L, slot, L->top - 1);
   invalidateTMcache(hvalue(o));
@@ -829,7 +829,7 @@ LUA_API void lua_rawseti (lua_State *L, int idx, lua_Integer n) {
   api_checknelems(L, 1);
   o = index2addr(L, idx);
   api_check(L, ttistable(o), "table expected");
-  api_check(L, ttype(o) != LUA_TTBLFRZ, "attempt to modify frozen table");
+  if (ttype(o) == LUA_TTBLFRZ) luaG_runerror(L, "attempt to modify frozen table");
   luaH_setint(L, hvalue(o), n, L->top - 1);
   luaC_barrierback(L, hvalue(o), L->top-1);
   L->top--;
@@ -844,7 +844,7 @@ LUA_API void lua_rawsetp (lua_State *L, int idx, const void *p) {
   api_checknelems(L, 1);
   o = index2addr(L, idx);
   api_check(L, ttistable(o), "table expected");
-  api_check(L, ttype(o) != LUA_TTBLFRZ, "attempt to modify frozen table");
+  if (ttype(o) == LUA_TTBLFRZ) luaG_runerror(L, "attempt to modify frozen table");
   setpvalue(&k, cast(void *, p));
   slot = luaH_set(L, hvalue(o), &k);
   setobj2t(L, slot, L->top - 1);
@@ -868,7 +868,7 @@ LUA_API int lua_setmetatable (lua_State *L, int objindex) {
   }
   switch (ttnov(obj)) {
     case LUA_TTABLE: {
-      api_check(L, ttype(obj) != LUA_TTBLFRZ, "attempt to modify frozen table");
+      if (ttype(obj) == LUA_TTBLFRZ) luaG_runerror(L, "attempt to modify frozen table");
       hvalue(obj)->metatable = mt;
       if (mt) {
         luaC_objbarrier(L, gcvalue(obj), mt);
