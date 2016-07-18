@@ -195,7 +195,7 @@ void luaV_finishget (lua_State *L, const TValue *t, TValue *key, StkId val,
 
 /*
 ** Finish a table assignment 't[key] = val'.
-** If 'slot' is NULL, 't' is not a table.  Otherwise, 'slot' points
+** If 'slot' is NULL, 't' is not a mutable table.  Otherwise, 'slot' points
 ** to the entry 't[key]', or to 'luaO_nilobject' if there is no such
 ** entry.  (The value at 'slot' must be nil, otherwise 'luaV_fastset'
 ** would have done the job.)
@@ -205,7 +205,7 @@ void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
   int loop;  /* counter to avoid infinite loops */
   for (loop = 0; loop < MAXTAGLOOP; loop++) {
     const TValue *tm;  /* '__newindex' metamethod */
-    if (slot != NULL) {  /* is 't' a table? */
+    if (slot != NULL) {  /* is 't' a mutable table? */
       Table *h = hvalue(t);  /* save 't' table */
       lua_assert(ttisnil(slot));  /* old value must be nil */
       tm = fasttm(L, h->metatable, TM_NEWINDEX);  /* get metamethod */
@@ -222,9 +222,12 @@ void luaV_finishset (lua_State *L, const TValue *t, TValue *key,
       }
       /* else will try the metamethod */
     }
-    else {  /* not a table; check metamethod */
-      if (ttisnil(tm = luaT_gettmbyobj(L, t, TM_NEWINDEX)))
+    else {  /* not a mutable table; check metamethod */
+      if (ttisnil(tm = luaT_gettmbyobj(L, t, TM_NEWINDEX))) {
+      	if (ttype(t) == LUA_TTBLFRZ)
+          luaG_runerror(L, "attempt to modify frozen table");
         luaG_typeerror(L, t, "index");
+      }
     }
     /* try the metamethod */
     if (ttisfunction(tm)) {
