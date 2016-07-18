@@ -431,7 +431,7 @@ static int sort (lua_State *L) {
 static int freeze (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
   lua_freezetable(L, 1);
-  lua_settop(1);
+  lua_settop(L, 1);
   return 1;  /* return table */
 }
 
