@@ -266,7 +266,7 @@ static void reallymarkobject (global_State *g, GCObject *o) {
       linkgclist(gco2ccl(o), g->gray);
       break;
     }
-    case LUA_TTABLE: {
+    case LUA_TTBLMUT: case LUA_TTBLFRZ: {
       linkgclist(gco2t(o), g->gray);
       break;
     }
@@ -562,7 +562,7 @@ static void propagatemark (global_State *g) {
   lua_assert(isgray(o));
   gray2black(o);
   switch (o->tt) {
-    case LUA_TTABLE: {
+    case LUA_TTBLMUT: case LUA_TTBLFRZ: {
       Table *h = gco2t(o);
       g->gray = h->gclist;  /* remove from 'gray' list */
       size = traversetable(g, h);
@@ -704,7 +704,7 @@ static void freeobj (lua_State *L, GCObject *o) {
       luaM_freemem(L, o, sizeCclosure(gco2ccl(o)->nupvalues));
       break;
     }
-    case LUA_TTABLE: luaH_free(L, gco2t(o)); break;
+    case LUA_TTBLMUT: case LUA_TTBLFRZ: luaH_free(L, gco2t(o)); break;
     case LUA_TTHREAD: luaE_freethread(L, gco2th(o)); break;
     case LUA_TUSERDATA: luaM_freemem(L, o, sizeudata(gco2u(o))); break;
     case LUA_TSHRSTR:
