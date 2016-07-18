@@ -266,7 +266,7 @@ LUA_API int   (lua_setmetatable) (lua_State *L, int objindex);
 LUA_API void  (lua_setuservalue) (lua_State *L, int idx);
 
 
-LUA_API void  (lua_isfrozentable) (lua_State *L, int idx);
+LUA_API int   (lua_isfrozentable) (lua_State *L, int idx);
 LUA_API void  (lua_freezetable) (lua_State *L, int idx);
 
 
