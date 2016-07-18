@@ -521,7 +521,7 @@ void luaV_concat (lua_State *L, int total) {
 */
 void luaV_objlen (lua_State *L, StkId ra, const TValue *rb) {
   const TValue *tm;
-  switch (ttype(rb)) {
+  switch (ttnov(rb)) {
     case LUA_TTABLE: {
       Table *h = hvalue(rb);
       tm = fasttm(L, h->metatable, TM_LEN);
@@ -529,13 +529,17 @@ void luaV_objlen (lua_State *L, StkId ra, const TValue *rb) {
       setivalue(ra, luaH_getn(h));  /* else primitive len */
       return;
     }
-    case LUA_TSHRSTR: {
-      setivalue(ra, tsvalue(rb)->shrlen);
-      return;
-    }
-    case LUA_TLNGSTR: {
-      setivalue(ra, tsvalue(rb)->u.lnglen);
-      return;
+    case LUA_TSTRING: {
+      switch (ttype(rb)) {
+        case LUA_TSHRSTR: {
+          setivalue(ra, tsvalue(rb)->shrlen);
+          return;
+        }
+        case LUA_TLNGSTR: {
+          setivalue(ra, tsvalue(rb)->u.lnglen);
+          return;
+        }
+      }
     }
     default: {  /* try metamethod */
       tm = luaT_gettmbyobj(L, rb, TM_LEN);
