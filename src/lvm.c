@@ -437,7 +437,7 @@ int luaV_equalobj (lua_State *L, const TValue *t1, const TValue *t2) {
         tm = fasttm(L, uvalue(t2)->metatable, TM_EQ);
       break;  /* will try TM */
     }
-    case LUA_TTABLE: {
+    case LUA_TTBLMUT: case LUA_TTBLFRZ: {
       if (hvalue(t1) == hvalue(t2)) return 1;
       else if (L == NULL) return 0;
       tm = fasttm(L, hvalue(t1)->metatable, TM_EQ);
