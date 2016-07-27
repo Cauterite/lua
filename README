@@ -1,3 +1,9 @@
+Adds two new library functions `table.freeze(t)` and `table.isfrozen(t)`.
+Once a table is frozen, it cannot be mutated in any way, and cannot be un-frozen.
+With a frozen table, values cannot be assigned, keys cannot be added or removed, metatables cannot be assigned or removed.
+However, the immutability is not transitive; objects contained in the table may still be mutable.
+
+---
 
 This is Lua 5.3.3, released on 30 May 2016.
 
